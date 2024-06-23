@@ -24,6 +24,13 @@ final isRedProvider = Provider<bool>((ref) {
   return color == 'red';
 });
 
+List<String> colorPatterns = [];
+final colorPatternsProvider = StateProvider<List<String>>((ref) {
+  final color = ref.watch(selectedButtonProvider);
+  colorPatterns.add(color);
+  return colorPatterns;
+});
+
 final selectedButtonProvider = StateProvider<String>((ref) => '');
 
 class SelectedButton extends ConsumerWidget{
@@ -33,7 +40,9 @@ class SelectedButton extends ConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
     final isRed = ref.watch(isRedProvider);
     final selectedButton = ref.watch(selectedButtonProvider);
+    final colorList = ref.watch(colorPatternsProvider);
 
+    print('colorList is: $colorList');
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +61,7 @@ class SelectedButton extends ConsumerWidget{
           ),
           SizedBox(height: 10,),
           isRed ? Text('Color is red') : Text('Color is blue'),
-          //selectedButton == 'red' ? Text('Color is red') : Text('Color is blue'),
+          selectedButton == 'red' ? Text('Color is red') : Text('Color is blue'),
         ]
       ),
     );
