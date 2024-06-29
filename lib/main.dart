@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'home/my_home_page.dart';
+import 'package:riverpod_dbestech/pages/frame/welcome/welcome.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
 
       ),
-      home: const MyHomePage(),
+      home: const Welcome(),
     );
   }
 }
