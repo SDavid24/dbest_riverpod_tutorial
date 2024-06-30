@@ -1,5 +1,4 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -168,7 +167,7 @@ class _WelcomePage extends ConsumerState<Welcome>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     reversed: false,
                     dotsCount: 3,
-                    position: state.page.toDouble(),
+                    position: state.page.toDouble(),  //set dot position with provider
                     decorator: DotsDecorator(
                       color: AppColors.primaryThirdElementText,
                       activeColor: AppColors.primaryText,
