@@ -1,194 +1,77 @@
-import 'package:dots_indicator/dots_indicator.dart';
+import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_dbestech/pages/frame/welcome/notifiers/welcome_notifier.dart';
-import 'package:riverpod_dbestech/widgets.dart';
 
-import '../../../app_colors.dart';
+final listProvider = StateProvider<List<String>>((_) {
+  return List.generate(5, (_) => Faker().person.firstName());
+});
 
-class Welcome extends ConsumerStatefulWidget {
-  const Welcome({super.key});
+final indexProvider = Provider<int>((_) {
+  return 0;
+});
 
-  static Route<void> route() {
-    return MaterialPageRoute(builder: (_) => const Welcome());
-  }
-
-  @override
-  ConsumerState<Welcome> createState() => _WelcomePage();
-}
-
-
-class _WelcomePage extends ConsumerState<Welcome>{
-  PageController pageController = PageController(initialPage: 0);
+class WelcomePage extends ConsumerWidget{
+  const WelcomePage({super.key});
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var state = ref.watch(welcomeProvider);
-
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
-        child: Scaffold(
-          body: Container(
-            width: 375,
-            margin: EdgeInsets.only(top: 34),
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                PageView(
-                  scrollDirection: Axis.horizontal,
-                  reverse: false,
-                  onPageChanged: (index){
-                    if (kDebugMode) {
-                      print("_______$index");
-                    }
-                    ref.read(welcomeProvider.notifier).pageChanged(index);
-                  },
-                  controller: pageController,
-                  pageSnapping: true,
-                  physics: ClampingScrollPhysics(),
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          width: 345,
-                          height: 345,
-                          child: Image.asset("assets/reading.png", fit: BoxFit.fitWidth,),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 15),
-                          child: const Text("First See Learning",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.primaryText,
-                              fontSize: 24,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 375,
-                          margin: EdgeInsets.only(top: 15),
-                          padding: EdgeInsets.only(top: 15, right: 30),
-                          child: const Text(
-                            "Forget about a for of paper all knowledge in one learning!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.primarySecondaryElementText,
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                        nextButton(pageController,1),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 345,
-                          height: 345,
-                          child: Image.asset("assets/man.png", fit: BoxFit.fitWidth,),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 15),
-                          child: const Text("Connect with everyone",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.primaryText,
-                              fontSize: 24,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 375,
-                          margin: EdgeInsets.only(top: 15),
-                          padding: EdgeInsets.only(top: 15, right: 30),
-                          child: const Text(
-                            "Always keep in touch with your tutor & friend. Let's get connected",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.primarySecondaryElementText,
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                        nextButton(pageController,2),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 345,
-                          height: 345,
-                          child: Image.asset("assets/boy.png", fit: BoxFit.fitWidth,),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 15),
-                          child: const Text("Always Fascinated Learning",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.primaryText,
-                              fontSize: 24,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 375,
-                          margin: EdgeInsets.only(top: 15),
-                          padding: EdgeInsets.only(top: 15, right: 30),
-                          child: const Text(
-                            "Forget about a for of paper all knowledge in one learning!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.primarySecondaryElementText,
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-
-                        nextButton(pageController,3),
-                      ],
-                    ),
-                  ],
-                ),
-                Positioned(
-                  child: DotsIndicator(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    reversed: false,
-                    dotsCount: 3,
-                    position: state.page.toDouble(),  //set dot position with provider
-                    decorator: DotsDecorator(
-                      color: AppColors.primaryThirdElementText,
-                      activeColor: AppColors.primaryText,
-                      size: const Size.square(8.0),
-                      activeSize: const Size(18.0, 18.0),
-                      activeShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-
-                  ),
-                ),
-              ],
-            ),
-
-          ),
-        ),
-      ),
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    print(".....page build....");
+    return Scaffold(
+      appBar: AppBar(),
+      body: _ListView(),
     );
   }
 
-  
+}
+
+class _ListView extends ConsumerWidget{
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListView.builder(
+      itemCount: ref.watch(listProvider.select((value) => value.length)), //Only rebuild if all the items change at once
+      itemBuilder: (_, index){
+        if (kDebugMode) {
+          print(".....list view  build....");
+        }
+        //We want to be able to pass list[index] into the _ElevatedButton below, but to do that,
+        //We also need the the widget to be a const so it doesn't rebuilt which means, we can't pass it as an
+        //argument. To effectively achieve this, we will be using ProviderScope
+        return  ProviderScope(
+          overrides: [indexProvider.overrideWith((ref) => index)], //reset the index
+          child: const _ListItem(),
+        );
+      },
+    );
+  }
+
+}
+
+class _ListItem extends ConsumerWidget {
+
+  const _ListItem();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final index = ref.read(indexProvider);
+    //final item = ref.watch(listProvider)[index];
+    final item = ref.watch(listProvider.select((value) => value[index]));
+
+    return ElevatedButton(
+      onPressed: (){
+        final list = ref.read(listProvider);
+
+        if (kDebugMode) {
+          print(".....list item  build....$item");
+          print(".....list index  build....${list[index]}");
+        }
+
+        list[index] = Faker().person.firstName(); //replace the clicked button name with a random one
+
+        ref.watch(listProvider.notifier).state = [...list]; //Update the list
+      }, child: Text(item),
+    );
+  }
+
 }

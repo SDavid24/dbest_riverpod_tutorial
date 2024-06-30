@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
 
       ),
-      home: const Welcome(),
+      home: const WelcomePage(),
     );
   }
 }
