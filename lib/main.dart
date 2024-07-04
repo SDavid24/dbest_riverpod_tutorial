@@ -7,6 +7,19 @@ part 'main.g.dart';
 @riverpod
 String StringLabel(StringLabelRef ref) => 'Hello world of Riverpod and Bloc';
 
+class NewStringLabel extends Notifier<String>{
+  @override
+  String build() {
+    return "newagedavid";
+  }
+
+  void toCamelCase(){
+    state = '${state[0].toUpperCase()}${state.substring(1).toLowerCase()}';
+    print(state);
+  }
+}
+
+final newStringLabel = NotifierProvider<NewStringLabel, String>(NewStringLabel.new);
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -26,12 +39,13 @@ class MyApp extends ConsumerWidget {
       ),
       home: Scaffold(
         body: Center(
-          child: Text(
-            ref.watch(stringLabelProvider.select((value) => value)),
-            style: const TextStyle(
-              fontSize: 30,
-            ),
-            textAlign: TextAlign.center,
+          child: Consumer(
+            builder: (context, ref, child) {
+              final String val = ref.watch(newStringLabel);
+              return ElevatedButton(onPressed: (){
+                ref.watch(newStringLabel.notifier.select((value) => value)).toCamelCase();
+              }, child: Text(val));
+            },
           ),
         ),
       ),
