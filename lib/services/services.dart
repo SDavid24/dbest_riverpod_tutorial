@@ -21,7 +21,7 @@ class ApiServices{
 }
 
 //The provider serves an entrypoint to shared data across the app....
-//Te user provider method is in a 'share state'
+//The user provider method is in a 'shared state'
 final userProvider = Provider<ApiServices>((ref) => ApiServices());
 
 
