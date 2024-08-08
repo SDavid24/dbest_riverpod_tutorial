@@ -21,6 +21,24 @@ class NewStringLabel extends Notifier<String>{
 
 final newStringLabel = NotifierProvider<NewStringLabel, String>(NewStringLabel.new);
 
+
+//Comparing difference between STateNotifier and Notifier
+
+/*
+
+class NewStringLabel2 extends StateNotifier<String>{
+  NewStringLabel2() : super("newagedavid");
+
+  void toCamelCase(){
+    state = '${state[0].toUpperCase()}${state.substring(1).toLowerCase()}';
+    print(state);
+  }
+}
+
+final newStringLabel2 = StateNotifierProvider<NewStringLabel2, String>((ref) => NewStringLabel2());
+*/
+
+
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -44,6 +62,7 @@ class MyApp extends ConsumerWidget {
               final String val = ref.watch(newStringLabel);
               return ElevatedButton(onPressed: (){
                 ref.watch(newStringLabel.notifier.select((value) => value)).toCamelCase();
+               // ref.watch(newStringLabel2.notifier.select((value) => value)).toCamelCase();
               }, child: Text(val));
             },
           ),
