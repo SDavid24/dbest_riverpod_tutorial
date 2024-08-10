@@ -1,42 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-part 'main.g.dart';
+import 'package:riverpod_dbestech/string_generator.dart';
 
-
-@riverpod
-String StringLabel(StringLabelRef ref) => 'Hello world of Riverpod and Bloc';
-
-class NewStringLabel extends Notifier<String>{
-  @override
-  String build() {
-    return "newagedavid";
-  }
-
-  void toCamelCase(){
-    state = '${state[0].toUpperCase()}${state.substring(1).toLowerCase()}';
-    print(state);
-  }
-}
-
-final newStringLabel = NotifierProvider<NewStringLabel, String>(NewStringLabel.new);
-
-
-//Comparing difference between STateNotifier and Notifier
-
-/*
-
-class NewStringLabel2 extends StateNotifier<String>{
-  NewStringLabel2() : super("newagedavid");
-
-  void toCamelCase(){
-    state = '${state[0].toUpperCase()}${state.substring(1).toLowerCase()}';
-    print(state);
-  }
-}
-
-final newStringLabel2 = StateNotifierProvider<NewStringLabel2, String>((ref) => NewStringLabel2());
-*/
 
 
 void main() {
@@ -49,6 +16,9 @@ class MyApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<String> randomStrList = ref.watch(strGeneratorProvider);
+    final random = Random();
+    
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
@@ -56,15 +26,89 @@ class MyApp extends ConsumerWidget {
 
       ),
       home: Scaffold(
-        body: Center(
-          child: Consumer(
-            builder: (context, ref, child) {
-              final String val = ref.watch(newStringLabel);
-              return ElevatedButton(onPressed: (){
-                ref.watch(newStringLabel.notifier.select((value) => value)).toCamelCase();
-               // ref.watch(newStringLabel2.notifier.select((value) => value)).toCamelCase();
-              }, child: Text(val));
-            },
+        appBar: AppBar(
+          title: const Center(child: Text("Dynamic Widget | Riverpod")),
+          backgroundColor: Colors.blue,
+        ),
+
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  ...randomStrList.map((e) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(bottom: 10, top: 5),
+                        height: 30,
+                        width: 280,
+                        color: Colors.blue,
+                        child:  Text(
+                          e.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      GestureDetector(
+                        child: const Icon(
+                          Icons.remove,
+                          color: Colors.black,
+                        ),
+                        onTap: (){
+                          int index = randomStrList.indexOf(e);
+                          ref.read(strGeneratorProvider.notifier).removeAnItem(index);
+                        },
+
+                      ),
+                    ],
+                  )),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      'create',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    onPressed: (){
+                      //add list to list function
+                      ref.read(strGeneratorProvider.notifier).addString(
+                          "random String ${5 + random.nextInt(1000 + 1 - 5)}");
+                    },
+
+                  ),
+
+                  ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      'clear',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                    ),
+                    onPressed: (){
+                      //clear list function
+                      ref.read(strGeneratorProvider.notifier).clearEntireList();
+                    },
+                  ),
+                ],
+              )
+
+            ],
           ),
         ),
       ),
